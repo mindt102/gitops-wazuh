@@ -35,7 +35,7 @@ deploy-wazuh-server:
 
     # https://stackoverflow.com/questions/46177836/how-to-specify-the-submodule-branch-in-gitlab-ci
     - git submodule sync --recursive
-    - git submodule update --init --remote --recursive
+    - git submodule update --remote
 
     - ansible-playbook -i $ANSIBLE_INVENTORY --private-key "$SSH_PRIVATE_KEY" -vvv playbooks/deploy_wazuh_server.yml
   when: manual
