@@ -23,11 +23,6 @@ default:
     - mkdir -p /etc/ansible/
     - cp -f "$ANSIBLE_CFG" /etc/ansible/ansible.cfg
 
-    # https://stackoverflow.com/questions/46177836/how-to-specify-the-submodule-branch-in-gitlab-ci
-    - apk add git
-    - git submodule sync --recursive
-    - git submodule update --init --remote --recursive
-
 deploy-wazuh-server:
   image:
     name: theohbrothers/docker-ansible:v2.10.7-alpine-3.13
@@ -36,7 +31,12 @@ deploy-wazuh-server:
   extends: .setup_ansible
   script:
     - apk update
-    - apk add bash openssl gawk grep sed
+    - apk add bash openssl gawk grep sed git
+
+    # https://stackoverflow.com/questions/46177836/how-to-specify-the-submodule-branch-in-gitlab-ci
+    - git submodule sync --recursive
+    - git submodule update --init --remote --recursive
+
     - ansible-playbook -i $ANSIBLE_INVENTORY --private-key "$SSH_PRIVATE_KEY" -vvv playbooks/deploy_wazuh_server.yml
   when: manual
 
