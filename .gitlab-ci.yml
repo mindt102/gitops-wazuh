@@ -13,7 +13,7 @@ stages:
 
 default:
   image:
-    name: debian:11
+    name: theohbrothers/docker-ansible:v2.10.7-alpine-3.13
     # To avoid downloading the image every time the pipeline is run
     pull_policy: if-not-present
   tags:
@@ -25,9 +25,6 @@ default:
     - cp -f "$ANSIBLE_CFG" /etc/ansible/ansible.cfg
 
 deploy-wazuh-server:
-  image:
-    name: theohbrothers/docker-ansible:v2.10.7-alpine-3.13
-    pull_policy: if-not-present
   stage: wazuhserver
   extends: .setup_ansible
   script:
@@ -42,9 +39,6 @@ deploy-wazuh-server:
   when: manual
 
 deploy-wazuh-agents:
-  image:
-    name: theohbrothers/docker-ansible:v2.10.7-alpine-3.13
-    pull_policy: if-not-present
   stage: wazuhagents
   extends: .setup_ansible
   script:
