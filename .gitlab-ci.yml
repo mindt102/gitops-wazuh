@@ -5,6 +5,7 @@ variables:
   GIT_SSL_NO_VERIFY: 1
   # To clone the submodules
   GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_UPDATE_FLAGS: --no-single-branch
 
 stages:
   - wazuhserver
@@ -34,8 +35,8 @@ deploy-wazuh-server:
     - apk add bash openssl gawk grep sed git
 
     # https://stackoverflow.com/questions/46177836/how-to-specify-the-submodule-branch-in-gitlab-ci
-    - git submodule sync --recursive
-    - git submodule update --remote
+    # - git submodule sync --recursive
+    # - git submodule update --remote
 
     - ansible-playbook -i $ANSIBLE_INVENTORY --private-key "$SSH_PRIVATE_KEY" -vvv playbooks/deploy_wazuh_server.yml
   when: manual
