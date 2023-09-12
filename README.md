@@ -34,3 +34,7 @@ Upload the content of this repository to a GitLab project and create the followi
     ```
     git clone --recurse-submodules <repository url>
     ```
+- To make sure the submodules are updated to the latest version, use the following command:
+    ```
+    git submodule update --remote
+    ```

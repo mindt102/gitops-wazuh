@@ -5,7 +5,7 @@ variables:
   GIT_SSL_NO_VERIFY: 1
   # To clone the submodules
   GIT_SUBMODULE_STRATEGY: recursive
-  GIT_SUBMODULE_UPDATE_FLAGS: --remote
+  GIT_SUBMODULE_UPDATE_FLAGS: --remote --no-single-branch
 
 stages:
   - wazuhserver
