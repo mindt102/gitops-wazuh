@@ -27,3 +27,10 @@ Upload the content of this repository to a GitLab project and create the followi
     [wazuh-server]
     10.0.0.13
     ```
+
+## Notes
+- This repository uses submodules to include the Ansible roles from the official Wazuh repository. The variable `GIT_SUBMODULE_STRATEGY` is set to `recursive` in the GitLab project to ensure the submodules are cloned when the pipeline is executed. 
+- To clone this repository, including the submodules, use the following command:
+    ```
+    git clone --recurse-submodules <repository url>
+    ```

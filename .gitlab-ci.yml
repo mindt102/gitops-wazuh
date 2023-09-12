@@ -23,6 +23,10 @@ default:
     - mkdir -p /etc/ansible/
     - cp -f "$ANSIBLE_CFG" /etc/ansible/ansible.cfg
 
+    # https://stackoverflow.com/questions/46177836/how-to-specify-the-submodule-branch-in-gitlab-ci
+    - git submodule sync --recursive
+    - git submodule update --init --remote --recursive
+
 deploy-wazuh-server:
   image:
     name: theohbrothers/docker-ansible:v2.10.7-alpine-3.13
