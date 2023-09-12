@@ -24,6 +24,7 @@ default:
     - cp -f "$ANSIBLE_CFG" /etc/ansible/ansible.cfg
 
     # https://stackoverflow.com/questions/46177836/how-to-specify-the-submodule-branch-in-gitlab-ci
+    - apk add git
     - git submodule sync --recursive
     - git submodule update --init --remote --recursive
 
