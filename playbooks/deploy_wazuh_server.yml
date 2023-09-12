@@ -1,0 +1,54 @@
+- hosts: wazuh-server
+  roles:
+    - role: wazuh-ansible/roles/wazuh/wazuh-indexer
+      perform_installation: false
+  vars:
+    indexer_node_master: true
+    instances:
+      node1:
+        name: node-1 # Important: must be equal to indexer_node_name.
+        ip: 127.0.0.1
+        role: indexer
+  tags:
+    - generate-certs
+  # tasks:
+  #   - block:
+  #       - name: List local_certs_path
+  #         command: ls -la {{ local_certs_path }}/wazuh-certificates/
+  #         register: local_certs_path_ls
+  #     delegate_to: localhost
+
+- hosts: wazuh-server
+  become: true
+  tasks:
+    - name: Install gnupg
+      apt:
+        name: gnupg
+        state: present
+      when: ansible_os_family == "Debian"
+
+- hosts: wazuh-server
+  become: true
+  become_user: root
+  roles:
+    - role: wazuh-ansible/roles/wazuh/wazuh-indexer
+    - role: wazuh-ansible/roles/wazuh/wazuh-dashboard
+
+  vars:
+    single_node: true
+    indexer_network_host: 127.0.0.1
+    ansible_shell_allow_world_readable_temp: true
+    instances: # A certificate will be generated for every node using the name as CN.
+      node1:
+        name: node-1
+        ip: 127.0.0.1
+        role: indexer
+
+- hosts: wazuh-server
+  become: true
+  roles:
+    - role: wazuh-ansible/roles/wazuh/ansible-wazuh-manager
+    - role: wazuh-ansible/roles/wazuh/ansible-filebeat-oss
+      filebeat_node_name: node-1
+      filebeat_output_indexer_hosts:
+        - "127.0.0.1:9200"

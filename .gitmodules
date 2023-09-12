@@ -1,0 +1,4 @@
+[submodule "playbooks/roles/wazuh-ansible"]
+	path = playbooks/roles/wazuh-ansible
+	url = https://github.com/wazuh/wazuh-ansible.git
+	branch = stable

@@ -1,0 +1,44 @@
+variables:
+  # To optimize CI/CD time
+  GIT_DEPTH: 10
+  # To avoid SSL certificate verification error when cloning private repositories
+  GIT_SSL_NO_VERIFY: 1
+
+stages:
+  - wazuhserver
+  - wazuhagents
+
+default:
+  image:
+    name: debian:11
+    # To avoid downloading the image every time the pipeline is run
+    pull_policy: if-not-present
+  tags:
+    - docker
+
+.setup_ansible:
+  before_script:
+    - mkdir -p /etc/ansible/
+    - cp -f "$ANSIBLE_CFG" /etc/ansible/ansible.cfg
+
+deploy-wazuh-server:
+  image:
+    name: theohbrothers/docker-ansible:v2.10.7-alpine-3.13
+    pull_policy: if-not-present
+  stage: wazuhserver
+  extends: .setup_ansible
+  script:
+    - apk update
+    - apk add bash openssl gawk grep sed
+    - ansible-playbook -i $ANSIBLE_INVENTORY --private-key "$SSH_PRIVATE_KEY" -vvv playbooks/deploy_wazuh_server.yml
+  when: manual
+
+deploy-wazuh-agents:
+  image:
+    name: theohbrothers/docker-ansible:v2.10.7-alpine-3.13
+    pull_policy: if-not-present
+  stage: wazuhagents
+  extends: .setup_ansible
+  script:
+    - ansible-playbook -i $ANSIBLE_INVENTORY --private-key "$SSH_PRIVATE_KEY" -vvv playbooks/deploy_wazuh_agents.yml
+  when: manual
