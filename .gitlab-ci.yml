@@ -3,6 +3,8 @@ variables:
   GIT_DEPTH: 10
   # To avoid SSL certificate verification error when cloning private repositories
   GIT_SSL_NO_VERIFY: 1
+  # To clone the submodules
+  GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
   - wazuhserver
