@@ -4,6 +4,7 @@ variables:
   # To avoid SSL certificate verification error when cloning private repositories
   GIT_SSL_NO_VERIFY: 1
   # To clone the submodules
+  # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/28883
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_SUBMODULE_UPDATE_FLAGS: --remote --no-single-branch
@@ -31,10 +32,6 @@ deploy-wazuh-server:
   script:
     - apk update
     - apk add bash openssl gawk grep sed git
-
-    # https://stackoverflow.com/questions/46177836/how-to-specify-the-submodule-branch-in-gitlab-ci
-    # - git submodule sync --recursive
-    # - git submodule update --remote
 
     - ansible-playbook -i $ANSIBLE_INVENTORY --private-key "$SSH_PRIVATE_KEY" -vvv playbooks/deploy_wazuh_server.yml
   when: manual
